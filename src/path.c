@@ -121,27 +121,15 @@ int get_fs_path(char* fs_path, int fs_path_bufsize, const struct jd_path jd_path
     }
 
     while ((dp = readdir(dir)) != NULL) {
-        snprintf(id_name, MAX_FNLEN, "%s", dp->d_name);
-        char* dot = strchr(id_name, '.');
-        char* space = strchr(id_name, ' ');
 
-        if (dot == NULL || space == NULL) {
+        if (dp->d_name[2] != '.') {
             continue;
         }
 
-        if ((space - dot) > 3) {
-            continue;
-        }
+        char id_chars[2] = { (jd_path.id / 10) + '0', (jd_path.id % 10) + '0' };
 
-        *space = '\0';
-
-        char id[3] = "";
-
-        snprintf(id, 3, "%s", dot + 1);
-
-        *space = ' ';
-
-        if (atoi(id) == jd_path.id) {
+        if (dp->d_name[3] == id_chars[0] && dp->d_name[4] == id_chars[1]) {
+            snprintf(id_name, MAX_FNLEN, "%s", dp->d_name);
             snprintf(fs_path, fs_path_bufsize, "%s/%s/%s/%s", jdfs_root, area_name, category_name, id_name);
             retval = SUCCESS;
             break;
