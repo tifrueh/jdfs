@@ -5,7 +5,7 @@ project(
 )
 
 # Try to get version string from git or use project version if that fails.
-git_describe = run_command('git', 'describe', '--tags', '--always', check: false)
+git_describe = run_command('git', 'describe', '--tags', '--always', '--dirty=*', check: false)
 git_describe_out = git_describe.stdout().strip()
 
 tag = 'v' + meson.project_version()
