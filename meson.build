@@ -4,15 +4,9 @@ project(
   version: '0.1.1-git'
 )
 
-# Try to get version string from git or use project version if that fails.
-git_describe = run_command('git', 'describe', '--tags', '--always', '--dirty=*', check: false)
-git_describe_out = git_describe.stdout().strip()
-
-tag = 'v' + meson.project_version()
-
-if git_describe_out != ''
-  tag = git_describe_out
-endif
+# Get version string from version control.
+git_describe = run_command('git', 'describe', '--tags', '--always', '--dirty=*', check: true)
+tag = git_describe.stdout().strip()
 
 # Define a variable for configuration data.
 conf_data = configuration_data()
